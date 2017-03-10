@@ -21,6 +21,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -47,6 +48,7 @@ import net.openid.appauth.browser.BrowserDescriptor;
 import net.openid.appauth.browser.ExactBrowserMatcher;
 import net.openid.appauthdemo.BrowserSelectionAdapter.BrowserInfo;
 
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private AuthorizationService mAuthService;
+    private static final int STATE_LENGTH = 2304;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,10 +174,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void makeAuthRequest(
-            @NonNull AuthorizationServiceConfiguration serviceConfig,
-            @NonNull IdentityProvider idp,
-            @NonNull AuthState authState) {
+    private void makeAuthRequest(@NonNull AuthorizationServiceConfiguration serviceConfig,
+                                 @NonNull IdentityProvider idp,
+                                 @NonNull AuthState authState) {
 
         String loginHint = ((EditText) findViewById(R.id.login_hint_value))
                 .getText()
@@ -185,11 +187,13 @@ public class MainActivity extends AppCompatActivity {
             loginHint = null;
         }
 
+        String state = generateRandomState();
+
         AuthorizationRequest authRequest = new AuthorizationRequest.Builder(
                 serviceConfig,
                 idp.getClientId(),
                 ResponseTypeValues.CODE,
-                idp.getRedirectUri())
+                idp.getRedirectUri(), state)
                 .setScope(idp.getScope())
                 .setLoginHint(loginHint)
                 .build();
@@ -228,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "Registration request complete");
                         if (registrationResponse != null) {
                             idp.setClientId(registrationResponse.clientId);
+                            idp.setClientSecret(registrationResponse.clientSecret);
                             Log.d(TAG, "Registration request complete successfully");
                             // Continue with the authentication
                             makeAuthRequest(registrationResponse.request.configuration, idp,
@@ -246,5 +251,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             return getResources().getColor(color);
         }
+    }
+
+    private String generateRandomState() {
+        SecureRandom sr = new SecureRandom();
+        byte[] random = new byte[STATE_LENGTH];
+        sr.nextBytes(random);
+        return Base64.encodeToString(random, Base64.NO_WRAP | Base64.NO_PADDING
+                | Base64.URL_SAFE);
     }
 }

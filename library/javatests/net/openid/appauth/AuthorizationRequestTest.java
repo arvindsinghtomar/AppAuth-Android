@@ -61,7 +61,8 @@ public class AuthorizationRequestTest {
                 getTestServiceConfig(),
                 TEST_CLIENT_ID,
                 ResponseTypeValues.CODE,
-                TEST_APP_REDIRECT_URI);
+                TEST_APP_REDIRECT_URI,
+                TEST_STATE);
     }
 
     /* ********************************** Builder() ***********************************************/
@@ -73,7 +74,8 @@ public class AuthorizationRequestTest {
                 null,
                 TEST_CLIENT_ID,
                 ResponseTypeValues.CODE,
-                TEST_APP_REDIRECT_URI);
+                TEST_APP_REDIRECT_URI,
+                TEST_STATE);
     }
 
     @Test(expected = NullPointerException.class)
@@ -83,7 +85,8 @@ public class AuthorizationRequestTest {
                 getTestServiceConfig(),
                 null,
                 ResponseTypeValues.CODE,
-                TEST_APP_REDIRECT_URI);
+                TEST_APP_REDIRECT_URI,
+                TEST_STATE);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -92,7 +95,8 @@ public class AuthorizationRequestTest {
                 getTestServiceConfig(),
                 "",
                 ResponseTypeValues.CODE,
-                TEST_APP_REDIRECT_URI);
+                TEST_APP_REDIRECT_URI,
+                TEST_STATE);
     }
 
     @Test(expected = NullPointerException.class)
@@ -102,7 +106,8 @@ public class AuthorizationRequestTest {
                 getTestServiceConfig(),
                 TEST_CLIENT_ID,
                 null,
-                TEST_APP_REDIRECT_URI);
+                TEST_APP_REDIRECT_URI,
+                TEST_STATE);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -111,7 +116,8 @@ public class AuthorizationRequestTest {
                 getTestServiceConfig(),
                 TEST_CLIENT_ID,
                 "",
-                TEST_APP_REDIRECT_URI);
+                TEST_APP_REDIRECT_URI,
+                TEST_STATE);
     }
 
     @Test(expected = NullPointerException.class)
@@ -121,7 +127,8 @@ public class AuthorizationRequestTest {
                 getTestServiceConfig(),
                 TEST_CLIENT_ID,
                 ResponseTypeValues.CODE,
-                null);
+                null,
+                TEST_STATE);
     }
 
     /* ************************************** clientId ********************************************/
@@ -253,16 +260,16 @@ public class AuthorizationRequestTest {
     @Test
     public void testLoginHint() {
         AuthorizationRequest req = mRequestBuilder
-            .setLoginHint(TEST_EMAIL_ADDRESS)
-            .build();
+                .setLoginHint(TEST_EMAIL_ADDRESS)
+                .build();
         assertThat(req.loginHint).isEqualTo(TEST_EMAIL_ADDRESS);
     }
 
     @Test
     public void testLoginHint_withNullValue() {
         AuthorizationRequest req = mRequestBuilder
-            .setLoginHint(null)
-            .build();
+                .setLoginHint(null)
+                .build();
 
         assertThat(req.loginHint).isNull();
     }
@@ -453,8 +460,10 @@ public class AuthorizationRequestTest {
                         AuthorizationRequest.PARAM_RESPONSE_TYPE,
                         AuthorizationRequest.PARAM_REDIRECT_URI,
                         AuthorizationRequest.PARAM_STATE,
+                        AuthorizationRequest.PARAM_NONCE,
                         AuthorizationRequest.PARAM_CODE_CHALLENGE,
-                        AuthorizationRequest.PARAM_CODE_CHALLENGE_METHOD)));
+                        AuthorizationRequest.PARAM_CODE_CHALLENGE_METHOD,
+                        AuthorizationRequest.PARAM_CUSTOM_BBDATA)));
 
         assertThat(uri.getQueryParameter(AuthorizationRequest.PARAM_CLIENT_ID))
                 .isEqualTo(TEST_CLIENT_ID);
@@ -464,10 +473,14 @@ public class AuthorizationRequestTest {
                 .isEqualTo(TEST_APP_REDIRECT_URI.toString());
         assertThat(uri.getQueryParameter(AuthorizationRequest.PARAM_STATE))
                 .isEqualTo(request.state);
+        assertThat(uri.getQueryParameter(AuthorizationRequest.PARAM_NONCE))
+                .isEqualTo(request.nonce);
         assertThat(uri.getQueryParameter(AuthorizationRequest.PARAM_CODE_CHALLENGE))
                 .isEqualTo(request.codeVerifierChallenge);
         assertThat(uri.getQueryParameter(AuthorizationRequest.PARAM_CODE_CHALLENGE_METHOD))
                 .isEqualTo(request.codeVerifierChallengeMethod);
+        assertThat(uri.getQueryParameter(AuthorizationRequest.PARAM_CUSTOM_BBDATA))
+                .isEqualTo(request.bbData);
     }
 
     @Test
@@ -493,14 +506,14 @@ public class AuthorizationRequestTest {
     @Test
     public void testToUri_loginHint() {
         Uri uri = mRequestBuilder
-            .setLoginHint(TEST_EMAIL_ADDRESS)
-            .build()
-            .toUri();
+                .setLoginHint(TEST_EMAIL_ADDRESS)
+                .build()
+                .toUri();
 
         assertThat(uri.getQueryParameterNames())
-            .contains(AuthorizationRequest.PARAM_LOGIN_HINT);
+                .contains(AuthorizationRequest.PARAM_LOGIN_HINT);
         assertThat(uri.getQueryParameter(AuthorizationRequest.PARAM_LOGIN_HINT))
-            .isEqualTo(TEST_EMAIL_ADDRESS);
+                .isEqualTo(TEST_EMAIL_ADDRESS);
     }
 
 

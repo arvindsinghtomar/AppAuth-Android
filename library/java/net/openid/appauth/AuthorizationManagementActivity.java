@@ -85,10 +85,10 @@ import org.json.JSONException;
  *       <li>Step C1: If the user presses the back button or otherwise causes the
  *           authorization activity to finish, the AuthorizationManagementActivity will be
  *           recreated or restarted.
- *       <li>Step C2a: If a cancelation PendingIntent was provided in the call to
+ *       <li>Step C2a: If a cancellation PendingIntent was provided in the call to
  *           {@link AuthorizationService#performAuthorizationRequest}, then this is
- *           used to invoke a cancelation activity.
- *       <li>Step C2b: If no cancelation PendingIntent was provided (legacy behavior), then
+ *           used to invoke a cancellation activity.
+ *       <li>Step C2b: If no cancellation PendingIntent was provided (legacy behavior), then
  *           the AuthorizationManagementActivity simply finishes, returning control
  *           to the activity above it in the back stack (typically, the
  *           initiating activity).
@@ -287,6 +287,7 @@ public class AuthorizationManagementActivity extends Activity {
         mCancelIntent = state.getParcelable(KEY_CANCEL_INTENT);
     }
 
+    @SuppressWarnings("VisibleForTests")
     private Intent extractResponseData(Uri responseUri) {
         if (responseUri.getQueryParameterNames().contains(AuthorizationException.PARAM_ERROR)) {
             return AuthorizationException.fromOAuthRedirect(responseUri).toIntent();
@@ -298,7 +299,7 @@ public class AuthorizationManagementActivity extends Activity {
             if (mAuthRequest.state == null && response.state != null
                     || (mAuthRequest.state != null && !mAuthRequest.state.equals(response.state))) {
                 Logger.warn("State returned in authorization response (%s) does not match state "
-                        + "from request (%s) - discarding response",
+                                + "from request (%s) - discarding response",
                         response.state,
                         mAuthRequest.state);
 

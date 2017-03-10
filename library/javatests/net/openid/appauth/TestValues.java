@@ -59,7 +59,8 @@ class TestValues {
                 getTestServiceConfig(),
                 TEST_CLIENT_ID,
                 responseType,
-                TEST_APP_REDIRECT_URI);
+                TEST_APP_REDIRECT_URI,
+                TEST_STATE);
     }
 
     public static AuthorizationRequest.Builder getTestAuthRequestBuilder() {

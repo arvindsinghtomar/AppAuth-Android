@@ -226,7 +226,8 @@ public class AuthorizationManagementActivityTest {
                 TestValues.getTestServiceConfig(),
                 TestValues.TEST_CLIENT_ID,
                 ResponseTypeValues.CODE,
-                TestValues.TEST_APP_REDIRECT_URI)
+                TestValues.TEST_APP_REDIRECT_URI,
+                TestValues.TEST_STATE)
                 .setState(null)
                 .build();
 

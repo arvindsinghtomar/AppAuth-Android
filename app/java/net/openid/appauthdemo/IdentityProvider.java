@@ -41,21 +41,22 @@ class IdentityProvider {
      */
     public static final int NOT_SPECIFIED = -1;
 
-    public static final IdentityProvider GOOGLE = new IdentityProvider(
-            "Google",
-            R.bool.google_enabled,
-            R.string.google_discovery_uri,
+    public static final IdentityProvider EXAMPLE_PROVIDER = new IdentityProvider(
+            "OpenID",
+            R.bool.openid_enabled,
+            R.string.openid_discovery_uri,
             NOT_SPECIFIED, // auth endpoint is discovered
             NOT_SPECIFIED, // token endpoint is discovered
             NOT_SPECIFIED, // dynamic registration not supported
-            R.string.google_client_id,
-            R.string.google_auth_redirect_uri,
-            R.string.google_scope_string,
-            R.drawable.btn_google,
-            R.string.google_name,
+            R.string.openid_client_id, // set openid_client_id here
+            R.string.openid_client_secret, // set openid_client_secret here
+            R.string.openid_auth_redirect_uri,
+            R.string.openid_scope_string,
+            R.drawable.btn_openid,
+            R.string.openid_name,
             android.R.color.white);
 
-    public static final List<IdentityProvider> PROVIDERS = Arrays.asList(GOOGLE);
+    public static final List<IdentityProvider> PROVIDERS = Arrays.asList(EXAMPLE_PROVIDER);
 
     public static List<IdentityProvider> getEnabledProviders(Context context) {
         ArrayList<IdentityProvider> providers = new ArrayList<>();
@@ -98,6 +99,9 @@ class IdentityProvider {
     private final int mClientIdRes;
 
     @StringRes
+    private final int mClientSecretRes;
+
+    @StringRes
     private final int mRedirectUriRes;
 
     @StringRes
@@ -110,6 +114,7 @@ class IdentityProvider {
     private Uri mTokenEndpoint;
     private Uri mRegistrationEndpoint;
     private String mClientId;
+    private String mClientSecret;
     private Uri mRedirectUri;
     private String mScope;
 
@@ -121,6 +126,7 @@ class IdentityProvider {
             @StringRes int tokenEndpointRes,
             @StringRes int registrationEndpointRes,
             @StringRes int clientIdRes,
+            @StringRes int clientSecretRes,
             @StringRes int redirectUriRes,
             @StringRes int scopeRes,
             @DrawableRes int buttonImageRes,
@@ -140,6 +146,7 @@ class IdentityProvider {
         this.mTokenEndpointRes = tokenEndpointRes;
         this.mRegistrationEndpointRes = registrationEndpointRes;
         this.mClientIdRes = clientIdRes;
+        this.mClientSecretRes = clientSecretRes;
         this.mRedirectUriRes = checkSpecified(redirectUriRes, "redirectUriRes");
         this.mScopeRes = checkSpecified(scopeRes, "scopeRes");
         this.buttonImageRes = checkSpecified(buttonImageRes, "buttonImageRes");
@@ -173,6 +180,9 @@ class IdentityProvider {
                 : null;
         mClientId = isSpecified(mClientIdRes)
                 ? res.getString(mClientIdRes)
+                : null;
+        mClientSecret = isSpecified(mClientSecretRes)
+                ? res.getString(mClientSecretRes)
                 : null;
         mRedirectUri = getUriResource(res, mRedirectUriRes, "mRedirectUriRes");
         mScope = res.getString(mScopeRes);
@@ -214,9 +224,16 @@ class IdentityProvider {
         return mClientId;
     }
 
-
     public void setClientId(String clientId) {
         mClientId = clientId;
+    }
+
+    public String getClientSecret() {
+        return mClientSecret;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        mClientSecret = clientSecret;
     }
 
     @NonNull

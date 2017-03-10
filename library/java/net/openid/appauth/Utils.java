@@ -14,10 +14,13 @@
 
 package net.openid.appauth;
 
+import android.util.Base64;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Utility class for common operations.
@@ -25,7 +28,9 @@ import java.io.InputStreamReader;
 class Utils {
     private static final int INITIAL_READ_BUFFER_SIZE = 1024;
 
-    private Utils() {}
+    private Utils() {
+        throw new IllegalStateException("This type is not intended to be instantiated");
+    }
 
     /**
      * Read a string from an input stream.
@@ -51,6 +56,16 @@ class Utils {
             }
         } catch (IOException ignored) {
             // deliberately do nothing
+        }
+    }
+
+    public static String decodeBase64urlNoPadding(String strEncoded)
+            throws UnsupportedEncodingException {
+        if (strEncoded != null) {
+            byte[] decodedBytes = Base64.decode(strEncoded, Base64.NO_PADDING);
+            return new String(decodedBytes, "UTF-8");
+        } else {
+            return "";
         }
     }
 }

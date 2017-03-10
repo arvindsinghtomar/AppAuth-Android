@@ -73,6 +73,11 @@ public class AuthState {
     private boolean mNeedsTokenRefreshOverride;
 
     /**
+     * Nonce value to be stored in order to validate ID token.
+     */
+    public static String sNonce;
+
+    /**
      * Creates an empty, unauthenticated {@link AuthState}.
      */
     public AuthState() {}
@@ -81,7 +86,7 @@ public class AuthState {
      * Creates an {@link AuthState} based on an authorization exchange.
      */
     public AuthState(@Nullable AuthorizationResponse authResponse,
-            @Nullable AuthorizationException authError) {
+                     @Nullable AuthorizationException authError) {
         checkArgument(authResponse != null ^ authError != null,
                 "exactly one of authResponse or authError should be non-null");
         update(authResponse, authError);
@@ -329,9 +334,9 @@ public class AuthState {
     }
 
     /**
-    * Determines whether the client credentials is considered to have expired. If no client
-    * credentials have been acquired, then this method will always return {@code false}
-    */
+     * Determines whether the client credentials is considered to have expired. If no client
+     * credentials have been acquired, then this method will always return {@code false}
+     */
     public boolean hasClientSecretExpired() {
         return hasClientSecretExpired(SystemClock.INSTANCE);
     }
