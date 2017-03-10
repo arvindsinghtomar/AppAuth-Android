@@ -342,36 +342,6 @@ service.performRegistrationRequest(
     });
 ```
 
-### Authorizing
-
-After configuring or retrieving an authorization service 
-configuration, an authorization request can be constructed for 
-dispatch:
-
-```java
-AuthorizationRequest req = new AuthorizationRequest.Builder(
-    config,
-    clientId,
-    ResponseTypeValues.CODE,
-    redirectUri)
-    .build();
-```
-
-Requests are dispatched with the help of `AuthorizationService`. 
-As this will open a custom tab or browser instance to fulfill 
-this request. An intent can be specified for both completion and 
-cancelation of the authorization flow:
-
-```java
-AuthorizationService service = new AuthorizationService(context);
-Intent postAuthIntent = new Intent(context, MyAuthResultHandlerActivity.class);
-Intent authCanceledIntent = new Intent(context, MyAuthCanceledHandlerActivity.class);
-service.performAuthorizationRequest(
-    req,
-    PendingIntent.getActivity(context, req.hashCode(), postAuthIntent, 0),
-    PendingIntent.getActivity(context, req.hashCode(), authCanceledIntent, 0));
-```
-
 ### Handling the Redirect
 We are using a custom scheme to send the OAuth redirect back to 
 app. The library configures the `RedirectUriReceiverActivity` to 
