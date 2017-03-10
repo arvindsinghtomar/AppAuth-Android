@@ -44,35 +44,6 @@ either through custom URI scheme redirects, or App Links.
 AS's that assume all clients are web-based or require clients to maintain
 confidentiality of the client secrets may not work well.
 
-## Building the Project
-### Prerequisites
-The project requires the Android SDK for API level 23 
-(Marshmallow) to build, though the produced binaries only 
-require API level 16 (Jellybean) to be used.
-
-## Configure the Client
-
-You can manually create a client in oxTrust or can dynamically register
-(Which is explained under "Dynamic Client Registration" in this doc).
-
-To use AppAuth we need three parameters: issuer, clientId and 
-redirectUri:
-
-- issuer - from which the configuration will be discovered
-- clientId - from dynamic client registration response
-- redirectUri - this scheme must be registered as a scheme in the project's manifest file
-
-In order to configure client manually in oxTrust, you need to provide 
-following values:
-- Registration Endpoint: YOUR_REGISTRATION_ENDPOINT
-- Redirect URIs (space-separated): YOUR_REDIRECT_URI
-- Response Types: CODE
-- Grant Types: AUTHORIZATION_CODE
-- Application Type: NATIVE
-
-After successful registration, it will return client id which 
-will use for Authorization.
-
 ## Configure the Demo App
 Authorization services can be added to the demo app by defining
 instances of `IdentityProvider`. Assuming a service named 
